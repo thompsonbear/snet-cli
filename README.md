@@ -1,12 +1,12 @@
 # snet cli
-### Subnet from the command line
+Subnet from the command line
 
 ## Installation
 
 #### Build from source
 
 ```Bash
-git clone https://github.com/thompsonbear/netmath
+git clone https://github.com/thompsonbear/snet-cli
 cd /netmath/snet-cli
 go build snet.go
 ```
