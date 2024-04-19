@@ -7,7 +7,7 @@ Subnet from the command line
 
 ```Bash
 git clone https://github.com/thompsonbear/snet-cli
-cd /netmath/snet-cli
+cd snet-cli
 go build snet.go
 ```
 
