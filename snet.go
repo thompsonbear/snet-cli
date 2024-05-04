@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"net/netip"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -13,33 +14,44 @@ import (
 	"github.com/charmbracelet/lipgloss/table"
 )
 
-func getHostRange(na netip.Addr, ba netip.Addr, short bool) string {
-	if(!na.Is4() && short){
-		return "Not Supported"
+func getHostRange(na netip.Addr, ba netip.Addr, short bool, usable bool) string {
+	if(na.Is6() && short){
+		return "Short IPv6 Not Supported"
 	}
 
-	if ba.Prev().Less(na.Next()) {
+	if ba.Prev().Less(na.Next()) && usable {
 		return "None"
 	}
 
-	if(!short){
-		return na.Next().String() + "-" + ba.Prev().String()
+	var first netip.Addr
+	var last netip.Addr
+	if usable {
+		first = na.Next()
+		last = ba.Prev()
+	} else {
+		first = na
+		last = ba
 	}
-	firstHost := na.Next().AsSlice()
-	lastHost := ba.Prev().AsSlice()
+
+	if(!short){
+		return first.String() + "-" + last.String()
+	}
+
+	firstBytes := first.AsSlice()
+	lastBytes := last.AsSlice()
 
 	var hostRange string
 
-	for i := 0; i < len(firstHost); i++ {
-		if(firstHost[i] == lastHost[i]){
-			hostRange += strconv.Itoa(int(firstHost[i]))
-		} else if (firstHost[i] < lastHost[i]){
-			hostRange += strconv.Itoa(int(firstHost[i])) + "-" + strconv.Itoa(int(lastHost[i]))
+	for i := 0; i < len(firstBytes); i++ {
+		if(firstBytes[i] == lastBytes[i]){
+			hostRange += strconv.Itoa(int(firstBytes[i]))
+		} else if (firstBytes[i] < lastBytes[i]){
+			hostRange += strconv.Itoa(int(firstBytes[i])) + "-" + strconv.Itoa(int(lastBytes[i]))
 		} else {
 			return "None"
 		}
 
-		if(i < len(firstHost) - 1) {
+		if(i < len(firstBytes) - 1) {
 			hostRange += "."
 		}
 	}
@@ -47,21 +59,38 @@ func getHostRange(na netip.Addr, ba netip.Addr, short bool) string {
 	return hostRange
 }
 
-type options struct{
-	borderless bool 
-	showCount bool
-	shortRange bool
-	listAll bool
+type Fields struct {
+	Prefix bool
+	Network bool
+	FullRange bool
+	UsableRange bool
+	Broadcast bool
+	SubnetMask bool
+	MaskBits bool
+	CountTotal bool
+	CountUsable bool
 }
 
-func printSubnetTable(s netmath.Subnet, opts options) {
-	colHeaders := []string{"Subnet", "Network", "Useable Hosts", "Broadcast", "Mask"}
+type Options struct{
+	All bool
+	Borderless bool
+	Count bool
+	ShortRange bool
+	Fields Fields
+}
 
-	if(opts.showCount){
-		colHeaders = append(colHeaders, "Total Count")
-		colHeaders = append(colHeaders, "Useable Count")
+func printSubnetTable(s netmath.Subnet, opts Options) {
+	colHeaders := []string{}
+
+	fv := reflect.ValueOf(opts.Fields)
+	ft := fv.Type()
+
+	for i := 0; i < fv.NumField(); i++ {
+		if fv.Field(i).Interface() == true {
+			colHeaders = append(colHeaders, ft.Field(i).Name)
+		}
 	}
-
+	
 	t := table.New().
 	BorderStyle(lipgloss.NewStyle().Foreground(lipgloss.Color("12"))).
 	StyleFunc(func(row, col int) lipgloss.Style {
@@ -75,7 +104,7 @@ func printSubnetTable(s netmath.Subnet, opts options) {
 		}
 	}).Headers(colHeaders...)
 
-	if(opts.borderless){
+	if(opts.Borderless){
 		t.BorderTop(false).
 		BorderBottom(false).
 		BorderLeft(false).
@@ -86,7 +115,7 @@ func printSubnetTable(s netmath.Subnet, opts options) {
 	}
 
 	var subnets []netmath.Subnet
-	if opts.listAll {
+	if opts.All {
 		subnets = s.ListAll()
 	} else {
 		subnets = make([]netmath.Subnet, 0, 1)
@@ -94,26 +123,10 @@ func printSubnetTable(s netmath.Subnet, opts options) {
 	}
 
 	for _, subnet := range subnets {
-		na, _ := subnet.Network()
-		ba, _ := subnet.Broadcast()
-		mask, _ := subnet.Mask()
-		hostRange := getHostRange(na, ba, opts.shortRange)
-		
-		cols := []string{subnet.String(), na.String(), hostRange, ba.String(), mask.String()}
-
-		if opts.showCount {
-			c, err := subnet.Count()
-			if err != nil {
-				cols = append(cols, "Error")
-				cols = append(cols, "Error")
-			} else {
-				cols = append(cols, strconv.FormatFloat(c, 'g', -1, 64)) // Total Hosts
-
-				if c >= 2 {
-					cols = append(cols, strconv.FormatFloat(c-2, 'g', -1, 64)) // Usable Hosts
-				} else {
-					cols = append(cols, "0")
-				}
+		cols := []string{}
+		for i := 0; i < fv.NumField(); i++ {
+			if fv.Field(i).Interface() == true {
+				cols = append(cols, getSingleField(subnet, ft.Field(i).Name, opts.ShortRange))
 			}
 		}
 		t.Row(cols...)
@@ -121,25 +134,112 @@ func printSubnetTable(s netmath.Subnet, opts options) {
 	fmt.Println(t)
 }
 
+func getSingleField(s netmath.Subnet, field string, short_range bool) string {
+	switch field {
+	case "Prefix":
+		na, _ := s.Network()
+		return fmt.Sprintf("%v/%v", na.String(), s.Bits())
+	case "Network":
+		na, _ := s.Network()
+		return na.String()
+	case "FullRange":
+		na, _ := s.Network()
+		ba, _ := s.Broadcast()
+		return getHostRange(na, ba, short_range, false)
+	case "UsableRange":
+		na, _ := s.Network()
+		ba, _ := s.Broadcast()
+		return getHostRange(na, ba, short_range, true)
+	case "Broadcast":
+		ba, _ := s.Broadcast()
+		return ba.String()
+	case "SubnetMask":
+		m, _ := s.Mask()
+		return m.String()
+	case "MaskBits":
+		return strconv.Itoa(s.Bits())
+	case "CountTotal":
+		ct, _ := s.Count()
+		return strconv.FormatFloat(ct, 'g', -1, 64)
+	case "CountUsable":
+		ct, _ := s.Count()
+		return strconv.FormatFloat(ct-2, 'g', -1, 64)
+	default: // Same as prefix
+		na, _ := s.Network()
+		return fmt.Sprintf("%v/%v", na, s.Bits())
+	}
+}
+
+func countTrueFields(fields Fields) (int, string) {
+	fv := reflect.ValueOf(fields)
+	ft := fv.Type()
+
+	var count int
+	var last string
+
+	for i := 0; i < fv.NumField(); i++ {
+		if fv.Field(i).Interface() == true {
+			count += 1
+			last = ft.Field(i).Name
+		}
+	}
+
+	return count, last
+}
+
 func main() {
 
 	var help bool
-	opts := options{}
-	
-	flag.BoolVar(&opts.listAll, "a", false, "Display ALL possible networks within the specified subnet.")
-	flag.BoolVar(&opts.listAll, "all", false, "")
+	opts := Options{}
 
-	flag.BoolVar(&opts.borderless, "b", false, "Display with a BORDERLESS table.")
-	flag.BoolVar(&opts.borderless, "borderless", false, "")
-
-	flag.BoolVar(&opts.showCount, "c", false, "Display ip ranges with host count.")
-	flag.BoolVar(&opts.showCount, "count", false, "")
-
-	flag.BoolVar(&opts.shortRange, "s", false, "Display ip ranges shorthand/abbreviated notation.")
-	flag.BoolVar(&opts.shortRange, "short", false, "")
-	
 	flag.BoolVar(&help, "h", false, "Display help message")
 	flag.BoolVar(&help, "help", false, "")
+	
+	// Base Options
+	flag.BoolVar(&opts.All, "a", false, "Display ALL possible networks within the specified subnet.")
+	flag.BoolVar(&opts.All, "all", false, "")
+
+	flag.BoolVar(&opts.Borderless, "bl", false, "Display output without borders.")
+	flag.BoolVar(&opts.Borderless, "borderless", false, "")
+
+	flag.BoolVar(&opts.ShortRange, "s", false, "Display ip ranges shorthand/abbreviated notation.")
+	flag.BoolVar(&opts.ShortRange, "short", false, "")
+
+	flag.BoolVar(&opts.Count, "c", false, "Display ip ranges with host count.")
+	flag.BoolVar(&opts.Count, "count", false, "")
+	
+	// Fields
+	flag.BoolVar(&opts.Fields.Prefix, "p", false, "CIDR Prefix Field")
+	flag.BoolVar(&opts.Fields.Prefix, "prefix", false, "")
+
+	flag.BoolVar(&opts.Fields.Network, "na", false, "Network Address Field")
+	flag.BoolVar(&opts.Fields.Network, "network", false, "")
+	flag.BoolVar(&opts.Fields.Network, "network-address", false, "")
+
+	flag.BoolVar(&opts.Fields.FullRange, "fr", false, "Full IP Range Field")
+	flag.BoolVar(&opts.Fields.FullRange, "full-range", false, "")
+
+	flag.BoolVar(&opts.Fields.UsableRange, "ur", false, "Usable IP Range Field")
+	flag.BoolVar(&opts.Fields.UsableRange, "usable-range", false, "")
+
+	flag.BoolVar(&opts.Fields.Broadcast, "ba", false, "Broadcast Address Field")
+	flag.BoolVar(&opts.Fields.Broadcast, "broadcast", false, "")
+	flag.BoolVar(&opts.Fields.Broadcast, "broadcast-address", false, "")
+
+	flag.BoolVar(&opts.Fields.SubnetMask, "m", false, "Subnet Mask Field")
+	flag.BoolVar(&opts.Fields.SubnetMask, "mask", false, "")
+	flag.BoolVar(&opts.Fields.SubnetMask, "subnet-mask", false, "")
+
+	flag.BoolVar(&opts.Fields.MaskBits, "b", false, "Subnet Mask Field")
+	flag.BoolVar(&opts.Fields.MaskBits, "bits", false, "")
+	flag.BoolVar(&opts.Fields.MaskBits, "mask-bits", false, "")
+
+	flag.BoolVar(&opts.Fields.CountTotal, "ct", false, "Count Total Hosts Field")
+	flag.BoolVar(&opts.Fields.CountTotal, "count-total", false, "")
+
+	flag.BoolVar(&opts.Fields.CountUsable, "cu", false, "Count Usable Hosts Field")
+	flag.BoolVar(&opts.Fields.CountUsable, "count-usable", false, "")
+	
 	
 	flag.Parse()
 	args := flag.Args()
@@ -175,6 +275,27 @@ func main() {
 		return
 	}
 
+	// Enable both count options if count option is specified
+	if opts.Count {
+		opts.Fields.CountTotal = true
+		opts.Fields.CountUsable = true
+	}
+
+	fieldCount, lastField := countTrueFields(opts.Fields)
+
+	if fieldCount > 1 || fieldCount == 0 {
+		// Set default options if no Fields are specified
+		if fieldCount == 0 {
+			opts.Fields.Prefix = true
+			opts.Fields.Network = true
+			opts.Fields.UsableRange = true
+			opts.Fields.Broadcast = true
+			opts.Fields.SubnetMask = true
+		}
+
+		printSubnetTable(s, opts)
+	} else if fieldCount == 1 {
+		fmt.Println(getSingleField(s, lastField, opts.ShortRange))
+	}
 	
-	printSubnetTable(s, opts)
 }
