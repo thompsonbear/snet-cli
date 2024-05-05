@@ -2,20 +2,6 @@
 
 Subnet from the command line
 
-## Installation
-
-#### 0. [Install Go](https://go.dev/dl) (Prerequisite)
-
-#### 1. Build from source
-
-```Bash
-git clone https://github.com/thompsonbear/snet-cli
-cd snet-cli
-go build .
-```
-
-#### 2. Install in path environment variable for your respective OS
-
 ## Usage
 
 #### Address with Mask Bits (CIDR Notation)
@@ -115,3 +101,18 @@ NetworkAddress  BroadcastAddress
 **-ur, -usable-range**
 
 > Display Usable IP Range Field
+
+ 
+## Installation
+
+#### 0. [Install Go](https://go.dev/dl) (Prerequisite)
+
+#### 1. Build from source
+
+```Bash
+git clone https://github.com/thompsonbear/snet-cli
+cd snet-cli
+go build .
+```
+
+#### 2. Install in path environment variable for your respective OS
