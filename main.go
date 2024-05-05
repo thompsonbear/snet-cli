@@ -20,52 +20,52 @@ func main() {
 	opts.All.UsageStr = "Display All possible networks within the specified subnet."
 	flag.BoolVar(&opts.All.Active, "a", false, fmt.Sprintf("%v (shorthand)", opts.All.UsageStr))
 	flag.BoolVar(&opts.All.Active, "all", false, opts.All.UsageStr)
-	
+
 	opts.Borderless.UsageStr = "Display output without borders."
 	flag.BoolVar(&opts.Borderless.Active, "bl", false, fmt.Sprintf("%v (shorthand)", opts.Borderless.UsageStr))
 	flag.BoolVar(&opts.Borderless.Active, "borderless", false, opts.Borderless.UsageStr)
-	
+
 	opts.SubRange.UsageStr = "Display IP ranges with sub-range notation"
 	flag.BoolVar(&opts.SubRange.Active, "s", false, fmt.Sprintf("%v (shorthand)", opts.SubRange.UsageStr))
 	flag.BoolVar(&opts.SubRange.Active, "short-range", false, opts.SubRange.UsageStr)
-	
+
 	// Field Options
 	opts.Fields.Prefix.UsageStr = "Display CIDR Prefix Field"
 	flag.BoolVar(&opts.Fields.Prefix.Active, "p", false, fmt.Sprintf("%v (shorthand)", opts.Fields.Prefix.UsageStr))
 	flag.BoolVar(&opts.Fields.Prefix.Active, "prefix", false, opts.Fields.Prefix.UsageStr)
-	
+
 	opts.Fields.NetworkAddress.UsageStr = "Display Network Address Field"
 	flag.BoolVar(&opts.Fields.NetworkAddress.Active, "na", false, fmt.Sprintf("%v (shorthand)", opts.Fields.NetworkAddress.UsageStr))
 	flag.BoolVar(&opts.Fields.NetworkAddress.Active, "network-address", false, opts.Fields.NetworkAddress.UsageStr)
-	
+
 	opts.Fields.FullRange.UsageStr = "Display Full IP Range Field"
 	flag.BoolVar(&opts.Fields.FullRange.Active, "fr", false, fmt.Sprintf("%v (shorthand)", opts.Fields.FullRange.UsageStr))
 	flag.BoolVar(&opts.Fields.FullRange.Active, "full-range", false, opts.Fields.FullRange.UsageStr)
-	
+
 	opts.Fields.UsableRange.UsageStr = "Display Usable IP Range Field"
 	flag.BoolVar(&opts.Fields.UsableRange.Active, "ur", false, fmt.Sprintf("%v (shorthand)", opts.Fields.UsableRange.UsageStr))
 	flag.BoolVar(&opts.Fields.UsableRange.Active, "usable-range", false, opts.Fields.UsableRange.UsageStr)
-	
+
 	opts.Fields.BroadcastAddress.UsageStr = "Display Broadcast Address Field"
 	flag.BoolVar(&opts.Fields.BroadcastAddress.Active, "ba", false, fmt.Sprintf("%v (shorthand)", opts.Fields.BroadcastAddress.UsageStr))
 	flag.BoolVar(&opts.Fields.BroadcastAddress.Active, "broadcast-address", false, opts.Fields.BroadcastAddress.UsageStr)
-	
+
 	opts.Fields.SubnetMask.UsageStr = "Display Subnet Mask Field"
 	flag.BoolVar(&opts.Fields.SubnetMask.Active, "m", false, fmt.Sprintf("%v (shorthand)", opts.Fields.SubnetMask.UsageStr))
 	flag.BoolVar(&opts.Fields.SubnetMask.Active, "mask", false, opts.Fields.SubnetMask.UsageStr)
-	
+
 	opts.Fields.MaskBits.UsageStr = "Display Subnet Mask Bits Field"
 	flag.BoolVar(&opts.Fields.MaskBits.Active, "b", false, fmt.Sprintf("%v (shorthand)", opts.Fields.MaskBits.UsageStr))
 	flag.BoolVar(&opts.Fields.MaskBits.Active, "bits", false, opts.Fields.MaskBits.UsageStr)
-	
+
 	opts.Fields.TotalCount.UsageStr = "Display Total Hosts Count Field"
 	flag.BoolVar(&opts.Fields.TotalCount.Active, "tc", false, fmt.Sprintf("%v (shorthand)", opts.Fields.TotalCount.UsageStr))
 	flag.BoolVar(&opts.Fields.TotalCount.Active, "total-count", false, opts.Fields.TotalCount.UsageStr)
-	
+
 	opts.Fields.UsableCount.UsageStr = "Display Usable Hosts Count Field"
 	flag.BoolVar(&opts.Fields.UsableCount.Active, "uc", false, fmt.Sprintf("%v (shorthand)", opts.Fields.UsableCount.UsageStr))
 	flag.BoolVar(&opts.Fields.UsableCount.Active, "usable-count", false, opts.Fields.UsableCount.UsageStr)
-	
+
 	opts.Count.UsageStr = "Both -uc and -tc options"
 	flag.BoolVar(&opts.Count.Active, "c", false, fmt.Sprintf("%v (shorthand)", opts.Count.UsageStr))
 	flag.BoolVar(&opts.Count.Active, "count", false, opts.Count.UsageStr)

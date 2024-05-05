@@ -1,8 +1,10 @@
-# snet cli
+# snet-cli
 
 Subnet from the command line
 
 ## Installation
+
+#### 0. [Install Go](https://go.dev/dl) (Prerequisite)
 
 #### 1. Build from source
 

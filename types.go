@@ -4,7 +4,7 @@ type Options struct {
 	All        Option
 	Borderless Option
 	Count      Option
-	SubRange Option
+	SubRange   Option
 	Fields     Fields
 }
 
