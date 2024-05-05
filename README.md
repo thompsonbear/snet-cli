@@ -4,7 +4,7 @@ Subnet from the command line
 
 ## Installation
 
-#### Build from source
+#### 1. Build from source
 
 ```Bash
 git clone https://github.com/thompsonbear/snet-cli
@@ -12,23 +12,25 @@ cd snet-cli
 go build .
 ```
 
-Install in path environment variables for your respective OS
+#### 2. Install in path environment variable for your respective OS
 
 ## Usage
 
-#### Address with Mask Bits
+#### Address with Mask Bits (CIDR Notation)
 
 ```Bash
 snet <options> <host-address>/<mask-bits>
+snet 192.168.20.10/23
 ```
 
 #### Address with Subnet Mask
 
 ```Bash
 snet <options> <host-address> <subnet-mask>
+snet 192.168.20.10 255.255.254.0
 ```
 
-#### Default Output Fields (Prints table with default fields)
+#### Output with No Field Options (Prints subnet table with default fields)
 
 ```Bash
 Prefix           NetworkAddress  UsableRange                  BroadcastAddress  SubnetMask
@@ -60,7 +62,7 @@ NetworkAddress  BroadcastAddress
 
 **-a, -all**
 
-> Display All possible networks within the specified subnet.
+> Display All possible networks within the specified subnet. (Always displays in a table)
 
 **-bl, -borderless**
 
@@ -86,7 +88,7 @@ NetworkAddress  BroadcastAddress
 
 **-c, -count**
 
-> Both -ct and -cu options.
+> Both -ct and -cu options
 
 **-fr, -full-range**
 

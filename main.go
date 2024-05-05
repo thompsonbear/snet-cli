@@ -66,7 +66,7 @@ func main() {
 	flag.BoolVar(&opts.Fields.UsableCount.Active, "uc", false, fmt.Sprintf("%v (shorthand)", opts.Fields.UsableCount.UsageStr))
 	flag.BoolVar(&opts.Fields.UsableCount.Active, "usable-count", false, opts.Fields.UsableCount.UsageStr)
 	
-	opts.Count.UsageStr = "Both -uc and -tc options."
+	opts.Count.UsageStr = "Both -uc and -tc options"
 	flag.BoolVar(&opts.Count.Active, "c", false, fmt.Sprintf("%v (shorthand)", opts.Count.UsageStr))
 	flag.BoolVar(&opts.Count.Active, "count", false, opts.Count.UsageStr)
 
