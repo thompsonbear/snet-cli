@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/charmbracelet/lipgloss v0.10.0
-	github.com/thompsonbear/netmath v0.1.0
+	github.com/thompsonbear/netmath v0.1.1
 )
 
 require (
