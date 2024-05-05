@@ -1,4 +1,5 @@
 # snet cli
+
 Subnet from the command line
 
 ## Installation
@@ -8,8 +9,10 @@ Subnet from the command line
 ```Bash
 git clone https://github.com/thompsonbear/snet-cli
 cd snet-cli
-go build snet.go
+go build .
 ```
+
+Install in path environment variables for your respective OS
 
 ## Usage
 
@@ -19,46 +22,92 @@ go build snet.go
 snet <options> <host-address>/<mask-bits>
 ```
 
-```Bash
-snet -b 192.168.20.10/23
-```
-
 #### Address with Subnet Mask
 
 ```Bash
 snet <options> <host-address> <subnet-mask>
 ```
 
-```Bash
-snet -b 192.168.20.10 255.255.254.0
-```
-
-#### Sample Output
+#### Default Output Fields (Prints table with default fields)
 
 ```Bash
-Prefix            Network       Useable Hosts        Broadcast       Mask
-192.168.20.10/23  192.168.20.0  192.168.20-21.1-254  192.168.21.255  255.255.254.0
+Prefix           NetworkAddress  UsableRange                  BroadcastAddress  SubnetMask
+192.168.20.0/23  192.168.20.0    192.168.20.1-192.168.21.254  192.168.21.255    255.255.254.0
 ```
 
-## Options
+#### Single Field Specified (Prints single value)
+
+```Bash
+snet -na 192.168.20.10/23
+
+Output:
+
+192.168.20.0
+```
+
+#### Multiple Fields Specified (Prints table)
+
+```Bash
+snet -na -ba 192.168.20.10/23
+
+Output:
+
+NetworkAddress  BroadcastAddress
+192.168.20.0    192.168.21.255
+```
+
+## General Options
 
 **-a, -all**
 
-- Display ALL possible networks within the specified subnet.
+> Display All possible networks within the specified subnet.
 
-**-b, -borderless**
+**-bl, -borderless**
 
-- Display with a BORDERLESS table.
-
-**-c, -count**
-
-- Display ip ranges with host count.
+> Display output without borders.
 
 **-h, -help**
 
-- Display help message
+> Display help message
 
-**-s, -simple**
+**-s, -sub-range**
 
-- Display ip ranges without sub-range notation.
+> Display IP ranges with sub-range notation
 
+## Field Options
+
+**-b, -mask-bits**
+
+> Display Subnet Mask Bits Field
+
+**-ba, -broadcast-address**
+
+> Display Broadcast Address Field
+
+**-c, -count**
+
+> Both -ct and -cu options.
+
+**-fr, -full-range**
+
+> Display Full IP Range Field
+
+**-m, -subnet-mask**
+
+> Display Subnet Mask Field
+
+**-p, -prefix**
+
+> Display CIDR Prefix Field
+
+**-tc, -total-count**
+
+> Display Total Hosts Count Field
+
+**-uc, -usable-count**
+
+> Display Usable Hosts Count Field
+
+**-ur, -usable-range**
+
+> Display Usable IP Range Field

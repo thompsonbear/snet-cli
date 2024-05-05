@@ -1,8 +1,8 @@
 BINARY_NAME=snet
 build:
-	GOARCH=amd64 GOOS=darwin go build -o ./build/macos/snet snet.go
-	GOARCH=amd64 GOOS=windows go build -o ./build/windows/snet.exe snet.go
-	GOARCH=amd64 GOOS=linux go build -o ./build/linux/snet snet.go
+	GOARCH=amd64 GOOS=darwin go build -o ./build/macos/snet .
+	GOARCH=amd64 GOOS=windows go build -o ./build/windows/snet.exe .
+	GOARCH=amd64 GOOS=linux go build -o ./build/linux/snet .
 
 archive: | archive_folder
 	tar -czf ./archive/snet-linux-amd64.tar.gz -C ./build/linux .
