@@ -8,8 +8,8 @@ build:
 archive: | archive_folder
 	tar -czf ./archive/snet-linux-amd64.tar.gz -C ./build/linux .
 	tar -czf ./archive/snet-macos-amd64.tar.gz -C ./build/macos .
-	tar -czf ./archive/snet-windows-amd64.tar.gz -C ./build/x64/windows .
-	tar -czf ./archive/snet-windows-386.tar.gz -C ./build/x86/windows .
+	zip -j ./archive/snet-windows-amd64.zip ./build/windows/x64/snet.exe
+	zip -j ./archive/snet-windows-386.zip ./build/windows/x86/snet.exe
 
 archive_folder:
 	mkdir -p ./archive
