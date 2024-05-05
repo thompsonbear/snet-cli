@@ -111,7 +111,7 @@ NetworkAddress  BroadcastAddress
 
 ```Bash
 git clone https://github.com/thompsonbear/snet-cli
-cd snet-cli
+cd ./snet-cli/snet
 go build .
 ```
 
