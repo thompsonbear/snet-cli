@@ -1,6 +1,4 @@
-# snet-cli
-
-Subnet from the command line
+![snet-cli banner](/assets/banner.png)
 
 ## Usage
 
