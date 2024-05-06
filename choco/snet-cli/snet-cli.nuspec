@@ -6,7 +6,7 @@
     <version>0.2.0</version>
     <packageSourceUrl>https://github.com/thompsonbear/snet-cli/releases</packageSourceUrl>
     <owners>Thompson Bear</owners>
-    <title>snet-cli (Install)</title>
+    <title>snet-cli</title>
     <authors>Thompson Bear</authors>
     <projectUrl>https://github.com/thompsonbear/snet-cli</projectUrl>
     <iconUrl>https://rawcdn.githack.com/thompsonbear/snet-cli/d05fc97b18fb03d46bba588bbaf24501d8fff3ec/assets/icon.png</iconUrl>
