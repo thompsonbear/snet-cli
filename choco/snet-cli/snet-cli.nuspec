@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one. -->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>snet-cli</id>
+    <version>0.2.0</version>
+    <packageSourceUrl>https://github.com/thompsonbear/snet-cli/releases</packageSourceUrl>
+    <owners>Thompson Bear</owners>
+    <title>snet-cli (Install)</title>
+    <authors>Thompson Bear</authors>
+    <projectUrl>https://github.com/thompsonbear/snet-cli</projectUrl>
+    <iconUrl>https://rawcdn.githack.com/thompsonbear/snet-cli/d05fc97b18fb03d46bba588bbaf24501d8fff3ec/assets/icon.png</iconUrl>
+    <licenseUrl>https://raw.githubusercontent.com/thompsonbear/snet-cli/v0.2.0/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/thompsonbear/snet-cli</projectSourceUrl>
+    <docsUrl>https://github.com/thompsonbear/snet-cli</docsUrl>
+    <bugTrackerUrl>https://github.com/thompsonbear/snet-cli/issues</bugTrackerUrl>
+    <tags>snet-cli snet subnet netmath</tags>
+    <summary>Subnet from the command line</summary>
+    <description>Subnet from the command line</description>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

@@ -20,5 +20,9 @@
 # Go workspace file
 go.work
 
+# Generated built/archived files
 /build
 /archive
+
+# Chocolatey packages
+*.nupkg
