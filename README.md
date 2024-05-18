@@ -103,14 +103,17 @@ NetworkAddress  BroadcastAddress
  
 ## Installation
 
+### Windows
+#### Chocolatey
+```
+choco install snet-cli
+```
+### Source
 #### 0. [Install Go](https://go.dev/dl) (Prerequisite)
-
-#### 1. Build from source
-
+#### 1. Clone and Build
 ```Bash
 git clone https://github.com/thompsonbear/snet-cli
 cd ./snet-cli/snet
 go build .
 ```
-
-#### 2. Install in path environment variable for your respective OS
+#### 2. Install snet binary in path environment variable for your respective OS
